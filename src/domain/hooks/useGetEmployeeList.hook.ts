@@ -7,5 +7,6 @@ export const useGetEmployeeList = () => {
   return useQuery({
     queryKey: ["getEmployeeList"],
     queryFn: () => service.getEmployeeList(),
+    staleTime: 0
   });
 };

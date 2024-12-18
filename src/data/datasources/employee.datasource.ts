@@ -1,55 +1,111 @@
 import EmployeeDatasourceContract from "@/domain/contracts/employeeDatasource.contract";
 import {
+  EmployeeCreateModel,
   EmployeeListModel,
   EmployeeListSchema,
+  EmployeeSchema,
   EmployeeModel,
 } from "@/domain/models/employee.model";
-import { GetEmployeeByIdParams } from "@/domain/params/employee.param";
+
+const BASE_URL = "http://localhost:3001";
+
+type ResponseType = {
+  message: string;
+  data: EmployeeListModel | EmployeeModel;
+  status: 'success' | 'error';
+};
 
 export default class EmployeeDatasource extends EmployeeDatasourceContract {
-  public async getEmployeeList(): Promise<EmployeeListModel | undefined> {
+  // fetch reuquest
+  private async fetchData<T>(
+    url: string,
+    options: RequestInit = {}
+  ): Promise<T | undefined> {
     try {
-      const response = await fetch(
-        "https://dummy.restapiexample.com/api/v1/employees",
-      );
+      const response = await fetch(url, options);
 
-      // Validate response
-      if (response.status !== 200) {
+      // return undefined if response is not ok
+      if (!response.ok) {
+        console.error(`Failed to fetch ${url}: ${response.statusText}`);
         return undefined;
       }
-
-      // Obtain json from response
-      const json = await response.json();
-      // Extract data
-      const data = json["data"];
-
-      return EmployeeListSchema.parse(data);
-    } catch (exception) {
+      const jsonResponse = await response.json();
+      return jsonResponse;
+    } catch (err) {
+      console.error(`Error fetching ${url}:`, err);
       return undefined;
     }
   }
+  public async getEmployeeList(): Promise<EmployeeListModel | undefined> {
+    const url = `${BASE_URL}/api/v1/employees`;
+    const data = await this.fetchData<ResponseType>(url);
 
-  public async createEmployee(
-    params: unknown,
-  ): Promise<EmployeeModel | undefined> {
-    throw new Error("Method not implemented.");
+    if (data) {
+      return EmployeeListSchema.parse(data.data);
+    }
+
+    return undefined;
   }
 
-  public async getEmployeeById(
-    params: GetEmployeeByIdParams,
+  public async createEmployee(
+    params: EmployeeCreateModel
   ): Promise<EmployeeModel | undefined> {
-    throw new Error("Method not implemented.");
+    const url = `${BASE_URL}/api/v1/create`;
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    };
+    const data = await this.fetchData<EmployeeModel>(url, options);
+    return data;
+  }
+
+  public async getEmployeeById(id: number): Promise<EmployeeModel | undefined> {
+    const url = `${BASE_URL}/api/v1/employee/${id}`;
+    const options = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store" as RequestCache,
+    };
+    const data = await this.fetchData<EmployeeModel>(url, options);
+    console.log(data);
+    if (data) {
+      return EmployeeSchema.parse(data);
+    }
+
+    return undefined;
   }
 
   public async updateEmployeeById(
-    params: unknown,
+    id: number,
+    params: EmployeeCreateModel
   ): Promise<EmployeeModel | undefined> {
-    throw new Error("Method not implemented.");
+    const url = `${BASE_URL}/api/v1/update/${id}`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(params),
+    };
+    const data = await this.fetchData<EmployeeModel>(url, options);
+    return data;
   }
 
-  public deleteEmployeeById(
-    params: unknown,
+  public async deleteEmployeeById(
+    id: number
   ): Promise<EmployeeModel | undefined> {
-    throw new Error("Method not implemented.");
+    const url = `${BASE_URL}/api/v1/delete/${id}`;
+    const options = {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    await this.fetchData<EmployeeModel>(url, options);
+    return undefined;
   }
 }

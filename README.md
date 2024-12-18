@@ -1,52 +1,71 @@
 # Frontend Challenge
 
-## Build a web app with Next.js 13
+## Update backend api point 
 
-As a frontend developer you get the task to implement a frontend for an employee API, where you can
-list, create, read, update and delete employees.
+Use a self created backend, you can find it in https://github.com/fangxie89/frontendChallengeServer, it's more stable and easier than restapiexample to management.
 
-### API
+## Project Directory Structure
 
-Use [restapiexample.com](https://dummy.restapiexample.com)
-
-> [!WARNING]
-> API has a rate limit
-
-A base structure is already implemented.
-Feel free to improve the current implementation whenever you see potential or let us know what you
-would do differently in your pull requests description.
-
-Please fork our repo and implement the missing features. Also track time and let us know how long it
-took you to finish the challenge.
-
-### Run It
-
-```bash
-$ nvm exec 20.9 npm run dev
+```
+├── CONTRIBUTING.md
+├── README.md
+├── commitlint.config.js
+├── next-env.d.ts
+├── next.config.js
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── src
+│   ├── app
+│   │   ├── employee
+│   │   │   ├── [employeeId]
+│   │   │   │   ├── default.tsx
+│   │   │   │   ├── edit            
+│   │   │   │   │   └── page.tsx        //edit page
+│   │   │   │   ├── not-found.tsx       // not found page
+│   │   │   │   └── page.tsx            // detail page
+│   │   │   ├── create
+│   │   │   │   └── page.tsx            // create page
+│   │   │   └── layout.tsx
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   └── page.tsx                    // list page
+│   ├── core
+│   │   └── formatters
+│   │       └── employee.formatter.ts
+│   ├── data
+│   │   └── datasources
+│   │       └── employee.datasource.ts
+│   ├── domain
+│   │   ├── contracts
+│   │   │   └── employeeDatasource.contract.ts
+│   │   ├── hooks
+│   │   │   └── useGetEmployeeList.hook.ts
+│   │   ├── models
+│   │   │   └── employee.model.ts
+│   │   ├── params
+│   │   │   └── employee.param.ts
+│   │   └── services
+│   │       ├── actions.ts                  // server actions
+│   │       └── employee.service.ts
+│   └── ui
+│       └── components                      // ui components
+│           ├── CreateForm.tsx
+│           ├── EditForm.tsx
+│           ├── EmployeeCard.tsx
+│           ├── EmployeeList.tsx
+│           ├── EmployeeListTable.tsx
+│           └── buttons.tsx
+├── tailwind.config.ts
+└── tsconfig.json
 ```
 
-By default, the app is reachable at `http://127.0.0.1:3000`
+## Project Description
 
-### Setup
+This project is a frontend challenge for a job application. It is a Next.js application that provides a list of employees and allows users to create, edit, and delete employees. The application uses TypeScript and Tailwind CSS for styling.
 
-Currently we are using node `20.9` so we recommend to use `nvm`.
+### Optimization details:
 
-Install `nvm` by following this
-[guide](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/).
-
-Install and use node `20.9`:
-
-```bash
-$ nvm use
-```
-
-> [!TIP]
-> Don't forget to install the node packages:
-
-```bash
-$ npm i
-```
-
-### Formatting
-
-Prettier is our formatter of choice. We added some settings for VSCode. If you use a different IDE please adapt the settings.
+- Use Next.js server actions to handle form submissions. 
+- Place client-side components as much as possible at the leaf nodes, and move requests to client-side components.
+- Optimize the employee.datasource.ts file by extracting common fetch functionality into private methods.

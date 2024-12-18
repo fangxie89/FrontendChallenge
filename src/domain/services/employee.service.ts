@@ -1,7 +1,6 @@
 import EmployeeDatasource from "@/data/datasources/employee.datasource";
 import EmployeeDatasourceContract from "../contracts/employeeDatasource.contract";
-import { EmployeeListModel, EmployeeModel } from "../models/employee.model";
-import { GetEmployeeByIdParams } from "../params/employee.param";
+import { EmployeeCreateModel, EmployeeListModel, EmployeeModel } from "../models/employee.model";
 
 export default class EmployeeService {
   private static _instance: EmployeeService;
@@ -19,22 +18,23 @@ export default class EmployeeService {
   public getEmployeeList(): Promise<EmployeeListModel | undefined> {
     return this.datasource.getEmployeeList();
   }
-  public createEmployee(params: unknown): Promise<EmployeeModel | undefined> {
+  public createEmployee(params: EmployeeCreateModel): Promise<EmployeeModel | undefined> {
     return this.datasource.createEmployee(params);
   }
   public getEmployeeById(
-    params: GetEmployeeByIdParams,
+    id: number,
   ): Promise<EmployeeModel | undefined> {
-    return this.datasource.getEmployeeById(params);
+    return this.datasource.getEmployeeById(id);
   }
   public updateEmployeeById(
-    params: unknown,
+    id: number,
+    params: EmployeeCreateModel,
   ): Promise<EmployeeModel | undefined> {
-    return this.datasource.updateEmployeeById(params);
+    return this.datasource.updateEmployeeById(id, params);
   }
   public deleteEmployeeById(
-    params: unknown,
+    id: number,
   ): Promise<EmployeeModel | undefined> {
-    return this.datasource.deleteEmployeeById(params);
+    return this.datasource.deleteEmployeeById(id);
   }
 }

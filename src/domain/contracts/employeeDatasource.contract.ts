@@ -1,21 +1,18 @@
-import { EmployeeListModel, EmployeeModel } from "../models/employee.model";
-import {
-  GetEmployeeByIdParams,
-  UpdateEmployeeParams,
-} from "../params/employee.param";
+import { EmployeeCreateModel, EmployeeListModel, EmployeeModel } from "../models/employee.model";
 
 export default abstract class EmployeeDatasourceContract {
   public abstract getEmployeeList(): Promise<EmployeeListModel | undefined>;
   public abstract createEmployee(
-    params: unknown,
+    params: EmployeeCreateModel,
   ): Promise<EmployeeModel | undefined>;
   public abstract getEmployeeById(
-    params: GetEmployeeByIdParams,
+    id: number,
   ): Promise<EmployeeModel | undefined>;
   public abstract updateEmployeeById(
-    params: unknown,
+    id: number,
+    params: EmployeeCreateModel,
   ): Promise<EmployeeModel | undefined>;
   public abstract deleteEmployeeById(
-    params: unknown,
+    id: number,
   ): Promise<EmployeeModel | undefined>;
 }
